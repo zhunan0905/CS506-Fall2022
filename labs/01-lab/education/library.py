@@ -1,3 +1,11 @@
 def draw_library():
-    print("library not found")
+    print("------------------------")
+    print("|      Mugar           |")
+    print("|                      |")
+    print("|                      |")
+    print("|                      |")
+    print("|                      |")
+    print("|                      |")
+    print("|                      |")
+    print("-----------------------|")
     return
