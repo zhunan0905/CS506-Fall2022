@@ -51,7 +51,10 @@ def get_prediction(node, example):
         return node.vote
     else:
         # your code here
-        return
+        if(node.attribute == '1'):
+            return get_prediction(node.left, example)
+        else:
+            return get_prediction(node.right, example)
 
 
 class SimpleDecisionTree:
@@ -73,29 +76,44 @@ class SimpleDecisionTree:
 
     def gini_split(self, data, attr):
         # compute the gini of the split on attr
-        pass
+        a = sum(data[int(attr)])/len(data[int(attr)])
+        b = [a, 1 - a]
+        return 1 - sum(map(lambda x : x ** 2, b))
     
 
     def get_majority_vote(self, subset):
         # get the majority vote from a subset of the dataset
-        pass
+        uniq, c = np.unique(subset[self.target_name], return_counts=True)
+        if(c[0] > c[1]):
+            return uniq[0]
+        else:
+            return uniq[1]
 
 
-    def is_pure(data, target_name):
+    def is_pure(self, data, target_name):
         # returns true if all data has the same target value
-        pass
+        if(len(np.unique(data[target_name])) == 1):
+            return True
+        return False
 
     def get_best_attribute(self, data):
         # returns None if none of the attributes are good
         if self.is_pure(data, self.target_name):
             return None
-        
-        pass
+        max = 0
+        best_att = ""
+        for each in data:
+            gini = self.gini_split(data, each)
+            if(gini > max):
+                max = gini
+                best_att = each
+        return best_att
+
 
     
     def get_subset(self, data, attr):
-        left = ... # return the rows of the dataset where attribute == 1
-        right = ... # return the rows of the dataset where attribute == 0
+        left = data[data[attr] == 1] # return the rows of the dataset where attribute == 1
+        right = data[data[attr] == 1] # return the rows of the dataset where attribute == 0
         return left, right
 
 
@@ -156,6 +174,6 @@ class SimpleDecisionTree:
     
 
 my_decision_tree = SimpleDecisionTree(2)
-my_decision_tree.train('education_train.tsv')
+my_decision_tree.train('labs/06-lab/education_train.tsv')
 my_decision_tree.pretty_print()
-my_decision_tree.test("education_test.tsv")
+my_decision_tree.test("labs/06-lab/education_test.tsv")
